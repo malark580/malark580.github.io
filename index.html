@@ -3,53 +3,96 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Кликер</title>
+    <title>Простой платформер на HTML</title>
     <style>
         body {
-            font-family: Arial, sans-serif;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
             margin: 0;
-            background-color: #f0f0f0;
+            padding: 0;
+            overflow: hidden; /* Запретить прокрутку страницы */
         }
-        .container {
-            text-align: center;
+
+        #game-container {
+            width: 800px;
+            height: 400px;
+            border: 1px solid #000;
+            position: relative;
         }
-        .button {
-            font-size: 24px;
-            padding: 15px 30px;
-            border: none;
-            border-radius: 5px;
-            background-color: #4caf50;
-            color: white;
-            cursor: pointer;
-            transition: background-color 0.3s;
-        }
-        .button:hover {
-            background-color: #45a049;
-        }
-        .score {
-            font-size: 48px;
-            margin: 20px;
+
+        #player {
+            width: 50px;
+            height: 50px;
+            background-color: red;
+            position: absolute;
+            bottom: 0;
+            left: 0;
         }
     </style>
 </head>
 <body>
-    <div class="container">
-        <div class="score" id="score">0</div>
-        <button class="button" onclick="increaseScore()">Кликни меня!</button>
+    <div id="game-container">
+        <div id="player"></div>
     </div>
 
     <script>
-        let score = 0;
+        document.addEventListener('DOMContentLoaded', function() {
+            const player = document.getElementById('player');
+            let playerLeft = 0;
+            let playerBottom = 0;
+            const gravity = 2;
+            let isJumping = false;
 
-        function increaseScore() {
-            score += 1;
-            document.getElementById('score').innerText = score;
-        }
+            function movePlayer() {
+                player.style.left = playerLeft + 'px';
+                player.style.bottom = playerBottom + 'px';
+            }
+
+            function fall() {
+                if (playerBottom > 0) {
+                    playerBottom -= gravity;
+                    movePlayer();
+                }
+            }
+
+            document.addEventListener('keydown', function(e) {
+                if (e.key === 'ArrowLeft' && playerLeft > 0) {
+                    playerLeft -= 10;
+                    movePlayer();
+                }
+                if (e.key === 'ArrowRight' && playerLeft < 750) {
+                    playerLeft += 10;
+                    movePlayer();
+                }
+                if (e.key === 'ArrowUp' && !isJumping) {
+                    jump();
+                }
+            });
+
+            function jump() {
+                isJumping = true;
+                let jumpHeight = 0;
+                let jumpInterval = setInterval(function() {
+                    if (jumpHeight < 150) {
+                        playerBottom += 10;
+                        jumpHeight += 10;
+                        movePlayer();
+                    } else {
+                        clearInterval(jumpInterval);
+                        let fallInterval = setInterval(function() {
+                            if (jumpHeight > 0) {
+                                playerBottom -= 10;
+                                jumpHeight -= 10;
+                                movePlayer();
+                            } else {
+                                clearInterval(fallInterval);
+                                isJumping = false;
+                            }
+                        }, 30);
+                    }
+                }, 30);
+            }
+
+            setInterval(fall, 30);
+        });
     </script>
 </body>
 </html>
