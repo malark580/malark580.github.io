@@ -1,0 +1,26 @@
+modLoader="javafml"
+loaderVersion="[47,)"
+license="MIT"
+
+[[mods]]
+modId="aibuddy"
+version="0.1.0"
+displayName="AI Buddy"
+authors="malark580"
+description='''
+A prototype Forge mod that spawns a survival-style AI buddy you can chat with.
+'''
+
+[[dependencies.aibuddy]]
+modId="forge"
+mandatory=true
+versionRange="[47,)"
+ordering="NONE"
+side="BOTH"
+
+[[dependencies.aibuddy]]
+modId="minecraft"
+mandatory=true
+versionRange="[1.20.1,1.21)"
+ordering="NONE"
+side="BOTH"
